@@ -17,7 +17,7 @@ stages:
   displayName: Detect code changes
   jobs:
   - job: Detect
-    pool: $(vmImage)
+    pool: $(vmImageName)
     steps:
     - pwsh: |
         $files=$(git diff HEAD HEAD~ --name-only)
