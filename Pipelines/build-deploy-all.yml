@@ -37,11 +37,11 @@ stages:
               Write-Output "Triggering Job Image"
               Write-Host "##vso[task.setvariable variable=buildJob;isOutput=true]$true"
             }
-            "Elysium.WebApiHost/" {
+            "Elysium.WebApi.Host/" {
               Write-Output "Triggering WebApi Image"
               Write-Host "##vso[task.setvariable variable=buildWebApi;isOutput=true]$true"
             }
-            "Elysium.WebAppHost/" {
+            "Elysium.WebApp.Host/" {
               Write-Output "Triggering WebApp Image"
               Write-Host "##vso[task.setvariable variable=buildWebApp;isOutput=true]$true"
             }
