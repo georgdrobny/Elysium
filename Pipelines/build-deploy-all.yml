@@ -1,0 +1,42 @@
+trigger:
+- main
+
+resources:
+- repo: self
+
+variables:
+  dockerRegistryServiceConnection: '217940c9-14ba-45ce-9481-1d5ec26d7c35'
+  containerRegistry: 'containerdemos.azurecr.io'
+  tag: '$(Build.BuildId)'
+
+  # Agent VM image name
+  vmImageName: 'ubuntu-latest'
+
+stages:
+- stage: DetectChanges
+  displayName: Detect code changes
+  jobs:
+  - job: Detect
+    pool: $(vmImage)
+    steps:
+    - pwsh: |
+        $files=$(git diff HEAD HEAD~ --name-only)
+        $files
+- stage: Build
+  condition: eq(false,true) 
+  displayName: Build and push stage
+  jobs:
+  - job: Build
+    displayName: Build
+    pool:
+      vmImage: $(vmImageName)
+    steps:
+    - task: Docker@2
+      displayName: Build and push an image to container registry
+      inputs:
+        command: buildAndPush
+        repository: $(imageRepository)
+        dockerfile: $(dockerfilePath)
+        containerRegistry: $(dockerRegistryServiceConnection)
+        tags: |
+          $(tag)
