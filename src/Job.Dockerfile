@@ -6,8 +6,6 @@ ARG BUILD_CONFIGURATION=Release
 
 WORKDIR /src
 
-ENV PATH="$PATH:/root/.dotnet/tools" 
-
 COPY Elysium.Job.Host/Elysium.Job.Host.csproj Elysium.Job.Host/Elysium.Job.Host.csproj
 
 RUN dotnet restore Elysium.Job.Host/Elysium.Job.Host.csproj
