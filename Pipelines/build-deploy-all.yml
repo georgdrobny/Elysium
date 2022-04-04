@@ -44,6 +44,9 @@ stages:
       
 - stage: BuildingAndTesting
   displayName: Building and Testing
+  variables:
+  - name: Changes
+    value: $[ stageDependencies.Changes.Changes.outputs['Changes.Changes'] ]
   dependsOn:
   - Changes
   jobs:
@@ -53,7 +56,7 @@ stages:
     steps:
     - bash: echo Hello, world! ${SHOULD}
       env:
-        SHOULD: $[ stageDependencies.Changes.Changes.outputs['Changes.Changes'] ]
+        SHOULD: $(Changes)
   - job: Build_WebApiHost  
     displayName: Build Web Api Build_Job
     dependsOn: []
