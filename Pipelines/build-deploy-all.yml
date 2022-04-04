@@ -60,10 +60,9 @@ stages:
     dependsOn: []
     steps:
     - script: echo Hello, world!
+
 - stage: UpdateHelmChartVersion
   displayName: Update the Helm Chart Version
-  dependsOn:
-  - BuildingAndTesting
   jobs:
   - job: UpdateHelmChartVersion
     steps:
