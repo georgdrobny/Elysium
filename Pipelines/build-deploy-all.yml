@@ -30,7 +30,7 @@ stages:
     dependsOn: []
     steps:
     - bash: |
-        COMMIT_IDS=`curl -H 'Authorization: Bearer ${SYSTEM_ACCESSTOKEN}' ${COLLECTION_URI}${PROJECT}/_apis/build/builds/${BUILD_ID}/changes?api-version=6.0 | jq '.value[].id'`
+        COMMIT_IDS=`curl -H 'Authorization: Bearer ${SYSTEM_ACCESSTOKEN}' ${COLLECTION_URI}${PROJECT}/_apis/build/builds/${BUILD_ID}/changes?api-version=6.0 | jq '.value[].id' | tr ' ' '\n'`
         echo ${COMMIT_IDS}
         CHANGED_FILES=`echo $COMMIT_IDS | xargs -L 1 git log -m -1 --name-only --pretty=format:| tr '\n' '|'`
         echo ${CHANGED_FILES}
