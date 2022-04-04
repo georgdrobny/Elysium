@@ -53,6 +53,7 @@ stages:
   - job: Build_JobHost
     displayName: Build Job Build_Job
     dependsOn: []
+    condition: $[ contains(variables['Changes'], '.yml') ]
     steps:
     - bash: echo Hello, world! ${SHOULD} ${IS} ${VARIA}
       env:
