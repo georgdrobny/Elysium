@@ -44,7 +44,6 @@ stages:
       
 - stage: BuildingAndTesting
   displayName: Building and Testing
-  condition: ${{ contains(variables['Changes'], 'src/') }}
   variables:
   - name: Changes
     value: $[ stageDependencies.Changes.Changes.outputs['Changes.Changes'] ]
@@ -52,13 +51,13 @@ stages:
   - Changes
   jobs:
   - job: Build_JobHost
-    condition: ${{ contains(variables['Changes'], 'Job.') }}
     displayName: Build Job Build_Job
     dependsOn: []
     steps:
-    - bash: echo Hello, world! ${SHOULD}
+    - bash: echo Hello, world! ${SHOULD} ${IS}
       env:
         SHOULD: $(Changes)
+        IS:  ${{ contains(variables['Changes'], 'Job.') }}
   - job: Build_WebApiHost
     condition: ${{ or(contains(variables['Changes'], 'WebApi.'), contains(variables['Changes'], 'Library')) }}
     displayName: Build Web Api Build_Job
