@@ -34,23 +34,21 @@ stages:
         foreach($f in $files) {
           switch -regex ($f) {
             "Elysium.Job.Host/" {
+              Write-Output "Triggering Job Image"
               Write-Host "##vso[task.setvariable variable=buildJob;isOutput=true]$true"
             }
             "Elysium.WebApiHost/" {
+              Write-Output "Triggering WebApi Image"
               Write-Host "##vso[task.setvariable variable=buildWebApi;isOutput=true]$true"
             }
             "Elysium.WebAppHost/" {
+              Write-Output "Triggering WebApp Image"
               Write-Host "##vso[task.setvariable variable=buildWebApp;isOutput=true]$true"
             }
           }
         }
       name: getChanges
       displayName: Get changed files
-    - pwsh: |
-        write-Output "BuildJob: $(buildJob)"
-        write-Output "BuildWebApi: $(buildWebApi)"
-        write-Output "BuildWebApp: $(buildWebApp)"
-      displayName: Dockerfiles to build
 - stage: BuildImages
   displayName: Build and push Container Images
   jobs:
