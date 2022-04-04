@@ -45,8 +45,8 @@ stages:
         write-Output $(buildWebApi)
         write-Output $(buildWebApp)
       displayName: Dockerfiles to build
-- stage: Build Docker Images
-  displayName: Build and push stage
+- stage: BuildImages
+  displayName: Build and push Container Images
   jobs:
   - job: Build
     displayName: Build
