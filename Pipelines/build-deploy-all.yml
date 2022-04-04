@@ -29,7 +29,7 @@ stages:
     displayName: Get Changed Folders
     dependsOn: []
     steps:
-    - bash: echo This script could use $SYSTEM_ACCESSTOKEN
+    - bash: echo This script could use ${SYSTEM_ACCESSTOKEN}
       env:
         SYSTEM_ACCESSTOKEN: $(System.AccessToken)
   - job: Build_JobHost
