@@ -46,7 +46,7 @@ stages:
   displayName: Building and Testing
   variables:
   - name: Changes
-    value: $[ stageDependencies.Changes.Changes.outputs['Changes.Changes'] ]
+    value: ${{stageDependencies.Changes.Changes.outputs['Changes.Changes']}}
   dependsOn:
   - Changes
   jobs:
