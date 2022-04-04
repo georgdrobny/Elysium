@@ -53,7 +53,7 @@ stages:
   - job: Build_JobHost
     displayName: Build Job Build_Job
     dependsOn: []
-    condition: contains(variables['Changes'], '.yml')
+    condition: contains(variables['Changes'], 'Job.')
     steps:
     - bash: echo Hello, world! ${SHOULD} ${IS} ${VARIA}
       env:
@@ -61,13 +61,13 @@ stages:
         VARIA: $[ variables['Changes'] ]
         IS:  $[ contains(variables['Changes'], '.yml') ]
   - job: Build_WebApiHost
-    condition: ${{ or(contains(variables['Changes'], 'WebApi.'), contains(variables['Changes'], 'Library')) }}
+    condition: or(contains(variables['Changes'], 'WebApi.'), contains(variables['Changes'], 'Library'))
     displayName: Build Web Api Build_Job
     dependsOn: []
     steps:
     - script: echo Hello, world!
   - job: Build_WebAppHost
-    condition: ${{ contains(variables['Changes'], 'WebApp.') }}
+    condition: contains(variables['Changes'], 'WebApp.')
     displayName: Build Web App Build_Job
     dependsOn: []
     steps:
@@ -75,7 +75,7 @@ stages:
 
 - stage: UpdateHelmChartVersion
   displayName: Update the Helm Chart Version
-  condition: ${{ contains(variables['Changes'], 'charts/') }}
+  condition: contains(variables['Changes'], 'charts/')
   variables:
   - name: Changes
     value: $[ stageDependencies.Changes.Changes.outputs['Changes.Changes'] ]
