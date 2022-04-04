@@ -52,7 +52,7 @@ stages:
   - Changes
   jobs:
   - job: Build_JobHost
-    condition: ${{ or(contains(variables['Changes'], 'Job.')) }}
+    condition: ${{ contains(variables['Changes'], 'Job.') }}
     displayName: Build Job Build_Job
     dependsOn: []
     steps:
@@ -66,7 +66,7 @@ stages:
     steps:
     - script: echo Hello, world!
   - job: Build_WebAppHost
-    condition: ${{ or(contains(variables['Changes'], 'WebApp.')) }}
+    condition: ${{ contains(variables['Changes'], 'WebApp.') }}
     displayName: Build Web App Build_Job
     dependsOn: []
     steps:
