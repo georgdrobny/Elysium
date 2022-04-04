@@ -25,6 +25,7 @@ stages:
     steps:
     - pwsh: |
         $files=$(git diff HEAD HEAD~ --name-only)
+        Write-Output $files
         foreach($f in $files) {
           switch -regex ($f) {
             "Elysium.Job.Host/" {
@@ -38,12 +39,13 @@ stages:
             }
           }
         }
+      displayName: Get changed files
     - pwsh: |
         write-Output $(buildJob)
         write-Output $(buildWebApi)
         write-Output $(buildWebApp)
-- stage: Build
-  condition: eq(false,true) 
+      displayName: Dockerfiles to build
+- stage: Build Docker Images
   displayName: Build and push stage
   jobs:
   - job: Build
@@ -52,11 +54,32 @@ stages:
       vmImage: $(vmImageName)
     steps:
     - task: Docker@2
-      displayName: Build and push an image to container registry
+      condition: eq(variables.buildJob, 'true')
+      displayName: Build and push the Job image to container registry
       inputs:
         command: buildAndPush
-        repository: $(imageRepository)
-        dockerfile: $(dockerfilePath)
+        repository: Job
+        dockerfile: Job.Dockerfile
+        containerRegistry: $(dockerRegistryServiceConnection)
+        tags: |
+          $(tag)
+    - task: Docker@2
+      condition: eq(variables.buildWebApi, 'true')
+      displayName: Build and push the WebApi image to container registry
+      inputs:
+        command: buildAndPush
+        repository: WebApi
+        dockerfile: WebApi.Dockerfile
+        containerRegistry: $(dockerRegistryServiceConnection)
+        tags: |
+          $(tag)
+    - task: Docker@2
+      condition: eq(variables.buildWebApp, 'true')
+      displayName: Build and push the WebApp image to container registry
+      inputs:
+        command: buildAndPush
+        repository: WebApp
+        dockerfile: WebApp.Dockerfile
         containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
           $(tag)
