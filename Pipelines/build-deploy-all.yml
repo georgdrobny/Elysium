@@ -54,10 +54,12 @@ stages:
     displayName: Build Job Build_Job
     dependsOn: []
     steps:
-    - bash: echo Hello, world! ${SHOULD} ${IS}
+    - bash: echo Hello, world! ${SHOULD} ${IS} ${VARIA} ${IS2}
       env:
         SHOULD: $(Changes)
+        VARIA: ${{variables['Changes'] }}
         IS:  ${{ contains(variables['Changes'], 'Job.') }}
+        IS2: ${{ contains(Changes, 'Job.') }}
   - job: Build_WebApiHost
     condition: ${{ or(contains(variables['Changes'], 'WebApi.'), contains(variables['Changes'], 'Library')) }}
     displayName: Build Web Api Build_Job
