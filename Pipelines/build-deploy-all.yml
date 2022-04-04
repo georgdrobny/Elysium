@@ -51,9 +51,9 @@ stages:
     displayName: Build Job Build_Job
     dependsOn: []
     steps:
-    - bash: echo Hello, world!
+    - bash: echo Hello, world! ${SHOULD}
       env:
-        SHOULD: $[ stageDependencies.Changes.GetChangedFolders.outputs['setvar.sauce'] ]
+        SHOULD: $[ stageDependencies.Changes.Changes.outputs['Changes.Changes'] ]
   - job: Build_WebApiHost  
     displayName: Build Web Api Build_Job
     dependsOn: []
