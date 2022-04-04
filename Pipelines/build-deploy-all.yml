@@ -32,6 +32,8 @@ stages:
     - bash: echo This script could use ${SYSTEM_ACCESSTOKEN}
       env:
         SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+        COLLECTION_URI: $(System.CollectionUri)
+        
   - job: Build_JobHost
     displayName: Build Job Build_Job
     dependsOn: 
