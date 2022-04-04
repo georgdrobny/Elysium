@@ -8,7 +8,10 @@ variables:
   dockerRegistryServiceConnection: '217940c9-14ba-45ce-9481-1d5ec26d7c35'
   containerRegistry: 'containerdemos.azurecr.io'
   tag: '$(Build.BuildId)'
-
+  # Dockerfiles to build
+  buildJob: 'false'
+  buildWebApi: 'false'
+  buildWebApp: 'false'
   # Agent VM image name
   vmImageName: 'ubuntu-latest'
 
@@ -22,7 +25,23 @@ stages:
     steps:
     - pwsh: |
         $files=$(git diff HEAD HEAD~ --name-only)
-        $files
+        foreach($f in $files) {
+          switch -regex ($f) {
+            "Elysium.Job.Host/" {
+              Write-Host "##vso[task.setvariable variable=buildJob]$true"
+            }
+            "Elysium.WebApiHost/" {
+              Write-Host "##vso[task.setvariable variable=buildWebApi]$true"
+            }
+            "Elysium.WebAppHost/" {
+              Write-Host "##vso[task.setvariable variable=buildWebApp]$true"
+            }
+          }
+        }
+    - pwsh: |
+        write-Output $(buildJob)
+        write-Output $(buildWebApi)
+        write-Output $(buildWebApp)
 - stage: Build
   condition: eq(false,true) 
   displayName: Build and push stage
