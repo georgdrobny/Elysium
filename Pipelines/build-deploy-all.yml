@@ -56,9 +56,9 @@ stages:
     variables:
     - name: buildJob
       value: $[ stageDependencies.Detect.Detect.outputs['getChanges.buildJob'] ]
-    - name: buildWebApp
-      value: $[ stageDependencies.Detect.Detect.outputs['getChanges.buildWebApi'] ]
     - name: buildWebApi
+      value: $[ stageDependencies.Detect.Detect.outputs['getChanges.buildWebApi'] ]
+    - name: buildWebApp
       value: $[ stageDependencies.Detect.Detect.outputs['getChanges.buildWebApp'] ]
     displayName: Build
     pool:
