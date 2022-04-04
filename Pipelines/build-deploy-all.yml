@@ -1,99 +1,60 @@
 trigger:
- branches:
-  include:
+  batch: true
+  branches:
+    include:
     - main
- paths:
-  exclude:
-    - Pipelines/*
+    - features/*
+  paths:
+    exclude:
+    - README.md
+    - Elysium.sln
 
-resources:
-- repo: self
+pr: 
+  branches:
+    include:
+    - main
+    - releases/*
+    exclude:
+    - releases/old*
+    drafts: false
 
-variables:
-  dockerRegistryServiceConnection: '217940c9-14ba-45ce-9481-1d5ec26d7c35'
-  containerRegistry: 'containerdemos.azurecr.io'
-  tag: '$(Build.BuildId)'
-  # Dockerfiles to build
-  buildJob: 'false'
-  buildWebApi: 'false'
-  buildWebApp: 'false'
-  # Agent VM image name
-  vmImageName: 'ubuntu-latest'
+pool:
+  vmImage: ubuntu-latest
 
 stages:
-- stage: Detect
-  displayName: Detect code changes
+- stage: BuildingAndTesting
+  displayName: Building and Testing
   jobs:
-  - job: Detect
-    pool: 
-      vmImage: $(vmImageName)
+  - job: GetChangedFolders
+    display: Get Changed Folders
+    dependsOn: []
     steps:
-    - pwsh: |
-        $files=$(git diff HEAD HEAD~ --name-only)
-        Write-Output $files
-        foreach($f in $files) {
-          switch -regex ($f) {
-            "Elysium.Job.Host/" {
-              Write-Output "Triggering Job Image"
-              Write-Host "##vso[task.setvariable variable=buildJob;isOutput=true]$true"
-            }
-            "Elysium.WebApi.Host/" {
-              Write-Output "Triggering WebApi Image"
-              Write-Host "##vso[task.setvariable variable=buildWebApi;isOutput=true]$true"
-            }
-            "Elysium.WebApp.Host/" {
-              Write-Output "Triggering WebApp Image"
-              Write-Host "##vso[task.setvariable variable=buildWebApp;isOutput=true]$true"
-            }
-          }
-        }
-      name: getChanges
-      displayName: Get changed files
-- stage: BuildImages
-  displayName: Build and push Container Images
+    - bash: echo This script could use $SYSTEM_ACCESSTOKEN
+      env:
+        SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+  - job: Build_JobHost
+    displayName: Build Job Build_Job
+    dependsOn: 
+    - GetChangedFolders
+    steps:
+    - script: echo Hello, world!
+  - job: Build_WebApiHost  
+    displayName: Build Web Api Build_Job
+    dependsOn:
+    - GetChangedFolders
+    steps:
+    - script: echo Hello, world!
+  - job: Build_WebAppHost
+    displayName: Build Web App Build_Job
+    dependsOn:
+    - GetChangedFolders
+    steps:
+    - script: echo Hello, world!
+- stage: UpdateHelmChartVersion
+  displayName: Update the Helm Chart Version
+  dependsOn:
+  - BuildingAndTesting
   jobs:
-  - job: Build
-    variables:
-    - name: buildJob
-      value: $[ stageDependencies.Detect.Detect.outputs['getChanges.buildJob'] ]
-    - name: buildWebApi
-      value: $[ stageDependencies.Detect.Detect.outputs['getChanges.buildWebApi'] ]
-    - name: buildWebApp
-      value: $[ stageDependencies.Detect.Detect.outputs['getChanges.buildWebApp'] ]
-    displayName: Build
-    pool:
-      vmImage: $(vmImageName)
+  - job: UpdateHelmChartVersion
     steps:
-    - task: Docker@2
-      condition: eq(variables.buildJob, 'true')
-      displayName: Build and push the Job image to container registry
-      inputs:
-        command: buildAndPush
-        repository: Job
-        dockerfile: src/Job.Dockerfile
-        buildContext: src/
-        containerRegistry: $(dockerRegistryServiceConnection)
-        tags: |
-          $(tag)
-    - task: Docker@2
-      condition: eq(variables.buildWebApi, 'true')
-      displayName: Build and push the WebApi image to container registry
-      inputs:
-        command: buildAndPush
-        repository: WebApi
-        dockerfile: src/WebApi.Dockerfile
-        buildContext: src/
-        containerRegistry: $(dockerRegistryServiceConnection)
-        tags: |
-          $(tag)
-    - task: Docker@2
-      condition: eq(variables.buildWebApp, 'true')
-      displayName: Build and push the WebApp image to container registry
-      inputs:
-        command: buildAndPush
-        repository: WebApp
-        dockerfile: src/WebApp.Dockerfile
-        buildContext: src/
-        containerRegistry: $(dockerRegistryServiceConnection)
-        tags: |
-          $(tag)
+    - script: echo Hello, world!
