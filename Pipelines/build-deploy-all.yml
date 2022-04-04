@@ -73,6 +73,7 @@ stages:
         command: buildAndPush
         repository: Job
         dockerfile: Job.Dockerfile
+        buildContext: src/
         containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
           $(tag)
@@ -83,6 +84,7 @@ stages:
         command: buildAndPush
         repository: WebApi
         dockerfile: WebApi.Dockerfile
+        buildContext: src/
         containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
           $(tag)
@@ -93,6 +95,7 @@ stages:
         command: buildAndPush
         repository: WebApp
         dockerfile: WebApp.Dockerfile
+        buildContext: src/
         containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
           $(tag)
