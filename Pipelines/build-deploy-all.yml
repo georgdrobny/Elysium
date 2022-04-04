@@ -42,7 +42,7 @@ stages:
       name: getChanges
       displayName: Get changed files
     - pwsh: |
-        write-Output "BuildJon: $(buildJob)"
+        write-Output "BuildJob: $(buildJob)"
         write-Output "BuildWebApi: $(buildWebApi)"
         write-Output "BuildWebApp: $(buildWebApp)"
       displayName: Dockerfiles to build
