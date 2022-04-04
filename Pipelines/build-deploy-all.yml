@@ -29,8 +29,7 @@ stages:
     displayName: Get Changed Folders
     dependsOn: []
     steps:
-    - bash: echo    
-          | echo curl -H 'Authorization: Bearer ${SYSTEM_ACCESSTOKEN}' ${COLLECTION_URI}/${PROJECT}/_apis/build/builds/${BUILD_ID}/changes?api-version=6.0
+    - bash: "echo curl -H 'Authorization: Bearer ${SYSTEM_ACCESSTOKEN}' ${COLLECTION_URI}/${PROJECT}/_apis/build/builds/${BUILD_ID}/changes?api-version=6.0"
       env:
         SYSTEM_ACCESSTOKEN: $(System.AccessToken)
         COLLECTION_URI: $(System.CollectionUri)
