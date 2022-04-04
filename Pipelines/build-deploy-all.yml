@@ -22,21 +22,29 @@ pool:
   vmImage: ubuntu-latest
 
 stages:
-- stage: BuildingAndTesting
-  displayName: Building and Testing
+- stage: Changes
+  displayName: Has Changes
   jobs:
   - job: GetChangedFolders
     displayName: Get Changed Folders
     dependsOn: []
     steps:
     - checkout: none 
-    - bash: "echo curl -H 'Authorization: Bearer ${SYSTEM_ACCESSTOKEN}' ${COLLECTION_URI}${PROJECT}/_apis/build/builds/${BUILD_ID}/changes?api-version=6.0"
+    - bash: |
+        COMMIT_IDS=`curl -H 'Authorization: Bearer ${SYSTEM_ACCESSTOKEN}' ${COLLECTION_URI}${PROJECT}/_apis/build/builds/${BUILD_ID}/changes?api-version=6.0`
+        CHANGED_FILES=`echo $COMMIT_IDS | xargs -I{} -L 1 git log -m -1 --name-only --pretty=format:{} | tr '\n' '|'`
+        echo "##vso[task.setvariable variable=changedFiles;isOutput=true]${CHANGED_FILES}"
       env:
         SYSTEM_ACCESSTOKEN: $(System.AccessToken)
         COLLECTION_URI: $(System.CollectionUri)
         PROJECT: $(System.TeamProject)
         BUILD_ID: $(Build.BuildId)
-
+      
+- stage: BuildingAndTesting
+  displayName: Building and Testing
+  dependsOn:
+  - Changes
+  jobs:
   - job: Build_JobHost
     displayName: Build Job Build_Job
     dependsOn: 
