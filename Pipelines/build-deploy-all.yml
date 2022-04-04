@@ -44,6 +44,7 @@ stages:
       
 - stage: BuildingAndTesting
   displayName: Building and Testing
+  condition: ${{ contains(variables['Changes'], 'src/') }}
   variables:
   - name: Changes
     value: $[ stageDependencies.Changes.Changes.outputs['Changes.Changes'] ]
