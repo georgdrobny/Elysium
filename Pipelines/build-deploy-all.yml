@@ -29,11 +29,14 @@ stages:
     displayName: Get Changed Folders
     dependsOn: []
     steps:
-    - bash: echo This script could use ${SYSTEM_ACCESSTOKEN}
+    - bash: echo    
+          | echo curl -H 'Authorization: Bearer ${SYSTEM_ACCESSTOKEN}' ${COLLECTION_URI}/${PROJECT}/_apis/build/builds/${BUILD_ID}/changes?api-version=6.0
       env:
         SYSTEM_ACCESSTOKEN: $(System.AccessToken)
         COLLECTION_URI: $(System.CollectionUri)
-        
+        PROJECT: $(System.TeamProject)
+        BUILD_ID: $(Build.BuildId)
+
   - job: Build_JobHost
     displayName: Build Job Build_Job
     dependsOn: 
