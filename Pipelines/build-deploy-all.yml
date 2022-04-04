@@ -52,18 +52,21 @@ stages:
   - Changes
   jobs:
   - job: Build_JobHost
+    condition: ${{ or(contains(variables['Changes'], 'Job.')) }}
     displayName: Build Job Build_Job
     dependsOn: []
     steps:
     - bash: echo Hello, world! ${SHOULD}
       env:
         SHOULD: $(Changes)
-  - job: Build_WebApiHost  
+  - job: Build_WebApiHost
+    condition: ${{ or(contains(variables['Changes'], 'WebApi.'), contains(variables['Changes'], 'Library')) }}
     displayName: Build Web Api Build_Job
     dependsOn: []
     steps:
     - script: echo Hello, world!
   - job: Build_WebAppHost
+    condition: ${{ or(contains(variables['Changes'], 'WebApp.')) }}
     displayName: Build Web App Build_Job
     dependsOn: []
     steps:
@@ -71,6 +74,12 @@ stages:
 
 - stage: UpdateHelmChartVersion
   displayName: Update the Helm Chart Version
+  condition: ${{ contains(variables['Changes'], 'charts/') }}
+  variables:
+  - name: Changes
+    value: $[ stageDependencies.Changes.Changes.outputs['Changes.Changes'] ]
+  dependsOn:
+  - Changes
   jobs:
   - job: UpdateHelmChartVersion
     steps:
