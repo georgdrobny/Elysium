@@ -29,7 +29,6 @@ stages:
     displayName: Get Changed Folders
     dependsOn: []
     steps:
-    - checkout: none 
     - bash: |
         COMMIT_IDS=`curl -H 'Authorization: Bearer ${SYSTEM_ACCESSTOKEN}' ${COLLECTION_URI}${PROJECT}/_apis/build/builds/${BUILD_ID}/changes?api-version=6.0`
         CHANGED_FILES=`echo $COMMIT_IDS | xargs -I{} -L 1 git log -m -1 --name-only --pretty=format:{} | tr '\n' '|'`
