@@ -16,7 +16,7 @@ variables:
   vmImageName: 'ubuntu-latest'
 
 stages:
-- stage: DetectChanges
+- stage: Detect
   displayName: Detect code changes
   jobs:
   - job: Detect
@@ -29,26 +29,34 @@ stages:
         foreach($f in $files) {
           switch -regex ($f) {
             "Elysium.Job.Host/" {
-              Write-Host "##vso[task.setvariable variable=buildJob]$true"
+              Write-Host "##vso[task.setvariable variable=buildJob;isOutput=true]$true"
             }
             "Elysium.WebApiHost/" {
-              Write-Host "##vso[task.setvariable variable=buildWebApi]$true"
+              Write-Host "##vso[task.setvariable variable=buildWebApi;isOutput=true]$true"
             }
             "Elysium.WebAppHost/" {
-              Write-Host "##vso[task.setvariable variable=buildWebApp]$true"
+              Write-Host "##vso[task.setvariable variable=buildWebApp;isOutput=true]$true"
             }
           }
         }
+      name: getChanges
       displayName: Get changed files
     - pwsh: |
-        write-Output $(buildJob)
-        write-Output $(buildWebApi)
-        write-Output $(buildWebApp)
+        write-Output "BuildJon: $(buildJob)"
+        write-Output "BuildWebApi: $(buildWebApi)"
+        write-Output "BuildWebApp: $(buildWebApp)"
       displayName: Dockerfiles to build
 - stage: BuildImages
   displayName: Build and push Container Images
   jobs:
   - job: Build
+    variables:
+    - name: buildJob
+      value: $[ stageDependencies.Detect.Detect.outputs['getChanges.buildJob'] ]
+    - name: buildWebApp
+      value: $[ stageDependencies.Detect.Detect.outputs['getChanges.buildWebApi'] ]
+    - name: buildWebApi
+      value: $[ stageDependencies.Detect.Detect.outputs['getChanges.buildWebApp'] ]
     displayName: Build
     pool:
       vmImage: $(vmImageName)
