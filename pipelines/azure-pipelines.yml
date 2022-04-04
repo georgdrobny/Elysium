@@ -1,19 +1,59 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
 trigger:
-- main
+  batch: true
+  branches:
+    include:
+    - main
+  paths:
+    exclude:
+    - README.md
+    - Elysium.sln
+
+pr: 
+  branches:
+    include:
+    - main
+    - releases/*
+    exclude:
+    - releases/old*
+    drafts: false
 
 pool:
   vmImage: ubuntu-latest
 
-steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
-
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+stages:
+- stage: BuildingAndTesting
+  displayName: Building and Testing
+  jobs:
+  - job: GetChangedFolders
+    display: Get Changed Folders
+    dependsOn: []
+    steps:
+    - bash: echo This script could use $SYSTEM_ACCESSTOKEN
+      env:
+        SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+  - job: Build_JobHost
+    displayName: Build Job Build_Job
+    dependsOn: 
+    - GetChangedFolders
+    steps:
+    - script: echo Hello, world!
+  - job: Build_WebApiHost  
+    displayName: Build Web Api Build_Job
+    dependsOn:
+    - GetChangedFolders
+    steps:
+    - script: echo Hello, world!
+  - job: Build_WebAppHost
+    displayName: Build Web App Build_Job
+    dependsOn:
+    - GetChangedFolders
+    steps:
+    - script: echo Hello, world!
+- stage: UpdateHelmChartVersion
+  displayName: Update the Helm Chart Version
+  dependsOn:
+  - BuildingAndTesting
+  jobs:
+  - job: UpdateHelmChartVersion
+    steps:
+    - script: echo Hello, world!
