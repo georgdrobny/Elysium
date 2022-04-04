@@ -5,6 +5,6 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
-- task: Bash@3
-  inputs:
-    filePath: 'src/build-all.sh'
+# - task: Bash@3
+#   inputs:
+#     filePath: 'src/build-all.sh'
