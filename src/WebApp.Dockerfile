@@ -1,3 +1,4 @@
+# Welcome from the future
 FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS runtime
 ENV ASPNETCORE_ENVIRONMENT="Production"
 ENV ASPNETCORE_URLS="http://+:8080"
