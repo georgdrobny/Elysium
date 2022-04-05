@@ -8,6 +8,7 @@
 # $ docker build -t elysium_webapi_build:latest .
 # Cleanup (required to run the beginning steps again)
 # $ docker rm -f elysium_webapi_build
+
 FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS runtime
 ENV ASPNETCORE_ENVIRONMENT="Production"
 ENV ASPNETCORE_URLS="http://+:8080"
