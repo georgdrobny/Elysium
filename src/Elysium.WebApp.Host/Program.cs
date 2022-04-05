@@ -23,5 +23,3 @@ app.MapRazorPages();
 
 app.Run();
 
-
-
