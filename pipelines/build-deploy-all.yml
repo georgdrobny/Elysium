@@ -1,3 +1,9 @@
+parameters:
+- name: forceBuild
+  displayName: Force Builds?
+  default: false
+  type: boolean
+
 trigger:
   batch: false
   branches:
@@ -53,7 +59,7 @@ stages:
   - job: Build_JobHost
     displayName: Build Job Build_Job
     dependsOn: []
-    condition: contains(variables['Changes'], 'Job.')
+    condition: or(contains(variables['Changes'], 'Job.'), parameters['forceBuild'])
     steps:
     - task: AzureCLI@2
       inputs:
