@@ -50,6 +50,7 @@ stages:
       
 - stage: BuildingAndTesting
   displayName: Building and Testing
+  condition: or(contains(variables.Changes, 'src/'), ${{ parameters.forceBuild }})
   variables:
   - name: Changes
     value: $[ stageDependencies.Changes.Changes.outputs['Changes.Changes'] ]
