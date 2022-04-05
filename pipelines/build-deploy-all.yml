@@ -69,10 +69,9 @@ stages:
         scriptLocation: 'inlineScript'
         inlineScript: |
           az acr login -n anbossar
-          docker buildx build --platform linux/amd64 -f Job.Dockerfile \ 
-              -t anbossar.azurecr.io/elysium/job:latest \
-              -t anbossar.azurecr.io/elysium/job:branch \
+          docker buildx build --platform linux/amd64,linux/arm64 -f Job.Dockerfile -t anbossar.azurecr.io/elysium/job:latest -t anbossar.azurecr.io/elysium/job:branch .
           docker push -a anbossar.azurecr.io/elysium/job
+        workingDirectory: 'src'
     - bash: echo Hello, world! ${SHOULD} ${IS} ${VARIA}
       env:
         SHOULD: $(Changes)
