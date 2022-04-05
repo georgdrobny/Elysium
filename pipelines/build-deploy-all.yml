@@ -47,12 +47,15 @@ stages:
         COLLECTION_URI: $(System.CollectionUri)
         PROJECT: $(System.TeamProject)
         BUILD_ID: $(Build.BuildId)
-      
 - stage: BuildingAndTesting
   displayName: Building and Testing
   variables:
   - name: Changes
     value: $[ stageDependencies.Changes.Changes.outputs['Changes.Changes'] ]
+  - name: BranchName
+    value: $[ {{ replace(variables.Build.SourceBranch, 'refs/heads/', '') }} ]
+  - name: TagName
+    value: $[ {{ format('{0}-{1}', variables.BranchName, variables.Build.BuildId)]
   dependsOn:
   - Changes
   jobs:
@@ -68,7 +71,7 @@ stages:
         scriptLocation: 'inlineScript'
         inlineScript: |
           az acr login -n anbossar
-          docker buildx build --platform linux/amd64 -f Job.Dockerfile -t anbossar.azurecr.io/elysium/job:latest -t anbossar.azurecr.io/elysium/job:branch --push .
+          docker buildx build --platform linux/amd64 -f Job.Dockerfile -t anbossar.azurecr.io/elysium/job:latest -t anbossar.azurecr.io/elysium/job:$(TagName) --push .
         workingDirectory: 'src'
     - bash: echo Hello, world! ${SHOULD} ${IS} ${VARIA}
       env:
