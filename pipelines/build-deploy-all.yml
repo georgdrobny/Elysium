@@ -52,10 +52,6 @@ stages:
   variables:
   - name: Changes
     value: $[ stageDependencies.Changes.Changes.outputs['Changes.Changes'] ]
-  - name: BranchName
-    value: $[ {{ replace(variables.Build.SourceBranch, 'refs/heads/', '') }} ]
-  - name: TagName
-    value: $[ {{ format('{0}-{1}', variables.BranchName, variables.Build.BuildId)]
   dependsOn:
   - Changes
   jobs:
