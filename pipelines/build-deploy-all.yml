@@ -50,7 +50,7 @@ stages:
       
 - stage: BuildingAndTesting
   displayName: Building and Testing
-  condition: or(contains(variables.Changes, 'src/'), ${{ parameters.forceBuild }})
+  #condition: or(contains(variables.Changes, 'src/'), ${{ parameters.forceBuild }})
   variables:
   - name: Changes
     value: $[ stageDependencies.Changes.Changes.outputs['Changes.Changes'] ]
@@ -60,8 +60,9 @@ stages:
   - job: Build_JobHost
     displayName: Build Job Build_Job
     dependsOn: []
-    condition: or(contains(variables.Changes, 'Job.'), ${{ parameters.forceBuild }})
+    #condition: or(contains(variables.Changes, 'Job.'), ${{ parameters.forceBuild }})
     steps:
+    - bash: echo $(Changes)
     - task: AzureCLI@2
       inputs:
         azureSubscription: 'anbossar-training-subscription(8b25cfae-660b-4066-9ce5-0858e9ab3eac)'
