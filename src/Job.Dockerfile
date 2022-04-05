@@ -1,3 +1,4 @@
+# asd
 FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS runtime
 ENV ASPNETCORE_ENVIRONMENT="Production"
 
