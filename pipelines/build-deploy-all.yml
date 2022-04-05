@@ -64,7 +64,7 @@ stages:
     - task: AzureCLI@2
       inputs:
         azureSubscription: 'anbossar-training-subscription(8b25cfae-660b-4066-9ce5-0858e9ab3eac)'
-        scriptType: 'batch'
+        scriptType: 'bash'
         scriptLocation: 'inlineScript'
         inlineScript: |
           az acr login -n anbossar
