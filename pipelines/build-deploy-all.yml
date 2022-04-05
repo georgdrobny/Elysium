@@ -55,6 +55,17 @@ stages:
     dependsOn: []
     condition: contains(variables['Changes'], 'Job.')
     steps:
+    - task: AzureCLI@2
+      inputs:
+        azureSubscription: 'anbossar-training-subscription(8b25cfae-660b-4066-9ce5-0858e9ab3eac)'
+        scriptType: 'batch'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          az acr login -n anbossar
+          docker buildx build --platform linux/amd64 -f Job.Dockerfile \ 
+              -t anbossar.azurecr.io/elysium/job:latest \
+              -t anbossar.azurecr.io/elysium/job:branch \
+          docker push -a anbossar.azurecr.io/elysium/job
     - bash: echo Hello, world! ${SHOULD} ${IS} ${VARIA}
       env:
         SHOULD: $(Changes)
