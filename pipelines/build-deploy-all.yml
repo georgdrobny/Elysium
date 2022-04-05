@@ -77,7 +77,7 @@ stages:
         VARIA: $[ variables['Changes'] ]
         IS:  $[ contains(variables['Changes'], '.yml') ]
   - job: Build_WebApiHost
-    condition: or(contains(variables['Changes'], 'WebApi.'), contains(variables['Changes'], 'Library'))
+    condition: or(contains(variables['Changes'], 'WebApi.'), contains(variables['Changes'], 'Library'), ${{ parameters.forceBuild }})
     displayName: Build Web Api Build_Job
     dependsOn: []
     steps:
