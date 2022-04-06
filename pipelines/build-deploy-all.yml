@@ -82,6 +82,7 @@ stages:
         workingDirectory: 'src'
     - bash: |
         docker buildx build --platform linux/amd64 -f Job.Dockerfile -t $REPOSITORY:latest -t $REPOSITORY:$TAG_NAME --push .
+      workingDirectory: src
       env:
         TAG_NAME: $(tag)
         REPOSITORY: $(repository)
