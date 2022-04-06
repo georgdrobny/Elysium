@@ -4,7 +4,7 @@ job_image:
   repository: anbossar.azurecr.io/elysium/job
   pullPolicy: IfNotPresent
 
-job_image_tag: ""
+job_image_tag: "20220406.16"
 
 imagePullSecrets: []
 nameOverride: ""
