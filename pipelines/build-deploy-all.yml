@@ -102,7 +102,7 @@ stages:
         GIT_MESSAGE="Update $HELM_VALUES_FILE with tag $TAG for $PARAMETER_NAME"
         echo $GIT_MESSAGE
         git commit -m "$GIT_MESSAGE"
-        git push HEAD:origin/$SOURCE_BRANCH
+        git push origin HEAD:$SOURCE_BRANCH
       env:
         TAG: $(tag)
         PARAMETER_NAME: job_image_tag
