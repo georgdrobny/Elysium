@@ -1,1 +1,1 @@
-﻿Console.WriteLine("Hello, World modified by Georg and Andre 2022");
+﻿Console.WriteLine("Hello, World modified by Georg and Andre");

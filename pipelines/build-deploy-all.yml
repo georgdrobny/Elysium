@@ -33,6 +33,8 @@ variables:
   value: $(Build.BuildNumber)
 - name: helmValuesFile
   value: charts/Elysium/values.yaml
+- name: repository
+  value: anbossar.azurecr.io/elysium/job
 
 stages:
 - stage: Changes
@@ -77,13 +79,12 @@ stages:
         scriptLocation: 'inlineScript'
         inlineScript: |
           az acr login -n anbossar
-          docker buildx build --platform linux/amd64 -f Job.Dockerfile -t anbossar.azurecr.io/elysium/job:latest -t anbossar.azurecr.io/elysium/job:$(TagName) --push .
         workingDirectory: 'src'
-    - bash: echo Hello, world! ${SHOULD} ${IS} ${VARIA}
+    - bash: |
+        docker buildx build --platform linux/amd64 -f Job.Dockerfile -t $REPOSITORY:latest -t $REPOSITORY:$TAG_NAME --push .
       env:
-        SHOULD: $(Changes)
-        VARIA: $[ variables['Changes'] ]
-        IS:  $[ contains(variables['Changes'], '.yml') ]
+        TAG_NAME: $(tag)
+        REPOSITORY: $(repository)
     - bash: |
         sed -i '' "s/^$PARAMETER_NAME:.*/$PARAMETER_NAME: \"$TAG\"/" $HELM_VALUES_FILE
         git status
