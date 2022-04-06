@@ -87,14 +87,18 @@ stages:
         TAG_NAME: $(tag)
         REPOSITORY: $(repository)
     - bash: |
-        sed -i '' "s/^$PARAMETER_NAME:.*/$PARAMETER_NAME: \"$TAG\"/" $HELM_VALUES_FILE
+        git config --global user.email "pipeline@azure.com"
+        git config --global user.name "Azure Pipeline"
+
+        sed "s/^$PARAMETER_NAME:.*/$PARAMETER_NAME: \"$TAG\"/" $HELM_VALUES_FILE
         git status
         git add $HELM_VALUES_FILE
         git status
-        git commit -m "Update default-values.yaml with tag $TAG for $PARAMETER_NAME"
+        GIT_MESSAGE="Update $HELM_VALUES_FILE with tag $TAG for $PARAMETER_NAME"
+        git commit -m $GIT_MESSAGE
         git push
       env:
-        TAG: $(TagName)
+        TAG: $(tag)
         PARAMETER_NAME: job_image_tag
         HELM_VALUES_FILE: $(helmValuesFile)
   - job: Build_WebApiHost
