@@ -37,10 +37,10 @@ variables:
   value: anbossar.azurecr.io/elysium/job
 - name: PullRequest
   value: eq(variables['Build.Reason'], 'PullRequest')
-  ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
+${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
   - name: sourceBranch
     value: $[replace(variables['System.PullRequest.SourceBranch'], 'refs/heads/', '')]
-  ${{ else }}:
+${{ else }}:
   - name: sourceBranch
     value: $[replace(variables['Build.SourceBranch'], 'refs/heads/', '')]
 
