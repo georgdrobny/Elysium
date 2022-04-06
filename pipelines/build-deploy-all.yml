@@ -90,12 +90,12 @@ stages:
         git config --global user.email "pipeline@azure.com"
         git config --global user.name "Azure Pipeline"
 
-        sed "s/^$PARAMETER_NAME:.*/$PARAMETER_NAME: \"$TAG\"/" $HELM_VALUES_FILE
+        sed -i '' "s/^$PARAMETER_NAME:.*/$PARAMETER_NAME: \"$TAG\"/" $HELM_VALUES_FILE
         git status
         git add $HELM_VALUES_FILE
         git status
         GIT_MESSAGE="Update $HELM_VALUES_FILE with tag $TAG for $PARAMETER_NAME"
-        git commit -m $GIT_MESSAGE
+        git commit -m "$GIT_MESSAGE"
         git push
       env:
         TAG: $(tag)
