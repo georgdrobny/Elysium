@@ -96,7 +96,7 @@ stages:
         echo Old $HELM_VALUES_FILE
         cat $HELM_VALUES_FILE
         echo sed -i bak "s/^$PARAMETER_NAME:.*/$PARAMETER_NAME: \"$TAG\"/" $HELM_VALUES_FILE
-        sed -i bak "s/^$PARAMETER_NAME:.*/$PARAMETER_NAME: \"$TAG\"/" $HELM_VALUES_FILE
+        sed -i "s/^$PARAMETER_NAME:.*/$PARAMETER_NAME: \"$TAG\"/" $HELM_VALUES_FILE
         ls -lR
         echo New $HELM_VALUES_FILE
         cat $HELM_VALUES_FILE
