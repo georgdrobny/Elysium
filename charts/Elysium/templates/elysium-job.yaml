@@ -1,0 +1,22 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "Elysium.fullname" . }}-job
+  labels:
+    {{- include "Elysium.labels" . | nindent 4 }}
+spec:
+  template:
+    metadata:
+      labels:
+        {{- include "Elysium.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+      - image: "{{ .Values.job_image_repository }}:{{ .Values.job_image_tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.pullPolicy }}
+        name: {{ .Chart.Name }}-job
+        resources: {}
+      restartPolicy: Never
