@@ -14,6 +14,7 @@ trigger:
     exclude:
     - README.md
     - Elysium.sln
+    - charts/Elysium/values.yaml
 
 pr: 
   branches:
@@ -26,6 +27,12 @@ pr:
 
 pool:
   vmImage: ubuntu-latest
+
+variables:
+- name: tag
+  value: $(Build.BuildNumber)
+- name: helmValuesFile
+  value: charts/Elysium/values.yaml
 
 stages:
 - stage: Changes
@@ -60,6 +67,9 @@ stages:
     dependsOn: []
     condition: or(contains(variables.Changes, 'Job.'), ${{ parameters.forceBuild }})
     steps:
+    - checkout: self
+      persistCredentials: true
+      clean: true
     - task: AzureCLI@2
       inputs:
         azureSubscription: 'anbossar-training-subscription(8b25cfae-660b-4066-9ce5-0858e9ab3eac)'
@@ -74,6 +84,17 @@ stages:
         SHOULD: $(Changes)
         VARIA: $[ variables['Changes'] ]
         IS:  $[ contains(variables['Changes'], '.yml') ]
+    - bash: |
+        sed -i '' "s/^$PARAMETER_NAME:.*/$PARAMETER_NAME: \"$TAG\"/" $HELM_VALUES_FILE
+        git status
+        git add $HELM_VALUES_FILE
+        git status
+        git commit -m "Update default-values.yaml with tag $TAG for $PARAMETER_NAME"
+        git push
+      env:
+        TAG: $(TagName)
+        PARAMETER_NAME: job_image_tag
+        HELM_VALUES_FILE: $(helmValuesFile)
   - job: Build_WebApiHost
     condition: or(contains(variables['Changes'], 'WebApi.'), contains(variables['Changes'], 'Library'), ${{ parameters.forceBuild }})
     displayName: Build Web Api Build_Job
