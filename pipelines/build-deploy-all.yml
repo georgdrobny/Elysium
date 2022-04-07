@@ -33,12 +33,18 @@ variables:
   value: $(Build.BuildNumber)
 - name: helmValuesFile
   value: charts/Elysium/values.yaml
+- name: acr
+  value: anbossar
 - name: repository
   value: anbossar.azurecr.io/elysium/job
 - name: PullRequest
   value: eq(variables['Build.Reason'], 'PullRequest')
 - name: sourceBranch
   value: $[replace(coalesce(variables['System.PullRequest.SourceBranch'], variables['Build.SourceBranch']), 'refs/heads/', '')]
+- name: appVersion
+  value: "1.0.0-beta"
+- name: chartVersion
+  value: 0.1.1
 
 stages:
 - stage: Changes
@@ -83,7 +89,6 @@ stages:
         scriptLocation: 'inlineScript'
         inlineScript: |
           az acr login -n anbossar
-        workingDirectory: 'src'
     - bash: |
         docker buildx build --platform linux/amd64 -f Job.Dockerfile -t $REPOSITORY:latest -t $REPOSITORY:$TAG_NAME --push .
       workingDirectory: src
@@ -119,7 +124,6 @@ stages:
 
 - stage: UpdateHelmChartVersion
   displayName: Update the Helm Chart Version
-  condition: contains(variables['Changes'], 'charts/')
   variables:
   - name: Changes
     value: $[ stageDependencies.Changes.Changes.outputs['Changes.Changes'] ]
@@ -127,5 +131,18 @@ stages:
   - Changes
   jobs:
   - job: UpdateHelmChartVersion
+    condition: or(contains(variables['Changes'], 'src/'), contains(variables['Changes'], 'charts/'), ${{ parameters.forceBuild }})
     steps:
-    - script: echo Hello, world!
+    - bash: |
+        helm version
+        export HELM_EXPERIMENTAL_OCI=1
+        helm package charts/elysium --version $CHART_VERSION --app-version $"APP_VERSION" --debug
+        USER_NAME="00000000-0000-0000-0000-000000000000"
+        PASSWORD=$(az acr login --name $ACR --expose-token --output tsv --query accessToken)
+        helm registry login $ACR.azurecr.io --username $USER_NAME --password $PASSWORD
+        helm push elysium*.tgz oci://$ACR.azurecr.io/helm
+      env:
+        ACR_NAME: $(repository)
+        APP_VERSION: $(appVersion)
+        CHART_VERSION: $(chartVersion)
+        ACR: $(acr)
