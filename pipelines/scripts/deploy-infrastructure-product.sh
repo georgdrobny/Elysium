@@ -10,9 +10,11 @@ az bicep upgrade
 az deployment sub validate \
     --template-file $DEPLOYMENT_FILE \
     --location $LOCATION \
-    --parameters @$PARAMETER_FILE
+    --parameters @$PARAMETER_FILE \
+    --parameters productName=$PRODUCT environmentName=$ENV
 
 az deployment sub create \
     --template-file $DEPLOYMENT_FILE \
     --location $LOCATION \
-    --parameters @$PARAMETER_FILE
+    --parameters @$PARAMETER_FILE \
+    --parameters productName=$PRODUCT environmentName=$ENV

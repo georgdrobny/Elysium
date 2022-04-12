@@ -131,6 +131,7 @@ stages:
     value: $[ stageDependencies.Changes.Changes.outputs['Changes.Changes'] ]
   dependsOn:
   - Changes
+  - BuildingAndTesting
   jobs:
   - job: UpdateHelmChartVersion
     condition: or(contains(variables['Changes'], 'src/'), contains(variables['Changes'], 'charts/'), ${{ parameters.forceBuild }})
