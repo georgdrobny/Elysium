@@ -141,7 +141,6 @@ stages:
         scriptType: 'bash'
         scriptLocation: 'inlineScript'
         inlineScript: |
-          az login
           env | sort
     - bash: |
         helm version
