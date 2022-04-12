@@ -45,6 +45,8 @@ variables:
   value: "1.0.0-beta"
 - name: chartVersion
   value: 0.1.1
+- name: azureServiceConnection
+  value: "anbossar-training-subscription(8b25cfae-660b-4066-9ce5-0858e9ab3eac)"
 
 stages:
 - stage: Changes
@@ -133,6 +135,14 @@ stages:
   - job: UpdateHelmChartVersion
     condition: or(contains(variables['Changes'], 'src/'), contains(variables['Changes'], 'charts/'), ${{ parameters.forceBuild }})
     steps:
+    - task: AzureCLI@2
+      inputs:
+        azureSubscription: $(azureServiceConnection)
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          az login
+          env | sort
     - bash: |
         helm version
         export HELM_EXPERIMENTAL_OCI=1
@@ -164,16 +174,18 @@ stages:
       runOnce:
         deploy:
           steps:
-            - bash: az login
             - task: AzureCLI@2
               inputs:
-                azureSubscription: 'anbossar-training-subscription(8b25cfae-660b-4066-9ce5-0858e9ab3eac)'
+                azureSubscription: $(azureServiceConnection)
                 scriptType: 'bash'
                 scriptLocation: 'inlineScript'
                 inlineScript: |
-                  az group create -n anbossar-dev-elysium -l northeurope
-                  az deployment group create --name dev_elysium_deployment --template-file 'infrastructure/products/elysium_demo/main.bicep' --parameters @environments/dev_elysium/infrastructure/parameters.json --resource-group anbossar-dev-elysium
-                  OUTPUT=`az deployment group show -g <resource-group-name> -n <deployment-name> --query properties.outputs` 
+                  az login
+                  env | sort
+            - bash: |
+                az group create -n anbossar-dev-elysium -l northeurope
+                az deployment group create --name dev_elysium_deployment --template-file 'infrastructure/products/elysium_demo/main.bicep' --parameters @environments/dev_elysium/infrastructure/parameters.json --resource-group anbossar-dev-elysium
+                OUTPUT=`az deployment group show -g <resource-group-name> -n <deployment-name> --query properties.outputs` 
   - deployment: dev_application
     condition: or(contains(variables['Changes'], 'src/'), contains(variables['Changes'], 'charts/'), ${{ parameters.forceBuild }})
     dependsOn:
