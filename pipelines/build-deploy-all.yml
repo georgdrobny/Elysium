@@ -185,5 +185,11 @@ stages:
               scriptType: 'bash'
               scriptLocation: 'scriptPath'
               scriptPath: pipelines/scripts/connect-to-cluster.sh
-              arguments: 'elysium_demo dev_elysium'
-          - bash: kubectl get nodes
+              arguments: 'elysium_demo dev_elysium $(acr)'
+          - task: AzureCLI@2
+            inputs:
+              azureSubscription: $(azureServiceConnection)
+              scriptType: 'bash'
+              scriptLocation: 'scriptPath'
+              scriptPath: pipelines/scripts/install-helm-chart.sh
+              arguments: '$(acr) $(chartVersion) elysium_demo dev_elysium elysium elysium_dev'
