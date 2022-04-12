@@ -1,7 +1,7 @@
 parameters:
 - name: forceBuild
   displayName: Force Builds?
-  default: false
+  default: true # for development
   type: boolean
 
 trigger:
@@ -139,22 +139,9 @@ stages:
       inputs:
         azureSubscription: $(azureServiceConnection)
         scriptType: 'bash'
-        scriptLocation: 'inlineScript'
-        inlineScript: |
-          env | sort
-    - bash: |
-        helm version
-        export HELM_EXPERIMENTAL_OCI=1
-        helm package charts/elysium --version $CHART_VERSION --app-version $"APP_VERSION" --debug
-        USER_NAME="00000000-0000-0000-0000-000000000000"
-        PASSWORD=$(az acr login --name $ACR --expose-token --output tsv --query accessToken)
-        helm registry login $ACR.azurecr.io --username $USER_NAME --password $PASSWORD
-        helm push elysium*.tgz oci://$ACR.azurecr.io/helm
-      env:
-        ACR_NAME: $(repository)
-        APP_VERSION: $(appVersion)
-        CHART_VERSION: $(chartVersion)
-        ACR: $(acr)
+        scriptLocation: 'scriptPath'
+        scriptPath: pipelines/scripts/update-helm-chart-version.sh
+        arguments: '$(acr) $(chartVersion) $(appVersion)'
 - stage: DeployAndTestDev
   displayName: Deploy and Test Dev
   variables:
