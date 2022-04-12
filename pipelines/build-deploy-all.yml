@@ -146,3 +146,41 @@ stages:
         APP_VERSION: $(appVersion)
         CHART_VERSION: $(chartVersion)
         ACR: $(acr)
+- stage: DeployAndTestDev
+  displayName: Deploy and Test Dev
+  variables:
+  - name: Changes
+    value: $[ stageDependencies.Changes.Changes.outputs['Changes.Changes'] ]
+  dependsOn:
+  - UpdateHelmChartVersion
+  - BuildingAndTesting
+  - Changes
+  jobs:
+  - deployment: dev_infrastructure
+    condition: or(contains(variables['Changes'], 'infrastructure/'), contains(variables['Changes'], 'environments/'), ${{ parameters.forceBuild }})
+    dependsOn: []
+    environment: dev_elysium
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+            - bash: az login
+            - task: AzureCLI@2
+              inputs:
+                azureSubscription: 'anbossar-training-subscription(8b25cfae-660b-4066-9ce5-0858e9ab3eac)'
+                scriptType: 'bash'
+                scriptLocation: 'inlineScript'
+                inlineScript: |
+                  az group create -n anbossar-dev-elysium -l northeurope
+                  az deployment group create --name dev_elysium_deployment --template-file 'infrastructure/products/elysium_demo/main.bicep' --parameters @environments/dev_elysium/infrastructure/parameters.json --resource-group anbossar-dev-elysium
+                  OUTPUT=`az deployment group show -g <resource-group-name> -n <deployment-name> --query properties.outputs` 
+  - deployment: dev_application
+    condition: or(contains(variables['Changes'], 'src/'), contains(variables['Changes'], 'charts/'), ${{ parameters.forceBuild }})
+    dependsOn:
+    - dev_infrastructure
+    environment: dev_elysium
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+            - bash: echo Hello World
