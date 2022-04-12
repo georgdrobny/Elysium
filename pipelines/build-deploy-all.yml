@@ -192,4 +192,4 @@ stages:
               scriptType: 'bash'
               scriptLocation: 'scriptPath'
               scriptPath: pipelines/scripts/install-helm-chart.sh
-              arguments: '$(acr) $(chartVersion) elysium_demo dev_elysium elysium elysium_dev'
+              arguments: '$(acr) $(chartVersion) elysium_demo dev_elysium elysium elysium_dev elysium_dev'
