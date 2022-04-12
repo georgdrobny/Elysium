@@ -180,12 +180,14 @@ stages:
                 scriptType: 'bash'
                 scriptLocation: 'inlineScript'
                 inlineScript: |
-                  az login
                   env | sort
             - bash: |
-                az group create -n anbossar-dev-elysium -l northeurope
-                az deployment group create --name dev_elysium_deployment --template-file 'infrastructure/products/elysium_demo/main.bicep' --parameters @environments/dev_elysium/infrastructure/parameters.json --resource-group anbossar-dev-elysium
-                OUTPUT=`az deployment group show -g <resource-group-name> -n <deployment-name> --query properties.outputs` 
+                az group create -n $RESOURCE_GROUP -l $LOCATION
+                az deployment group create --template-file 'infrastructure/products/$PRODUCT_NAME/main.bicep' --parameters @environments/$PRODUCT_NAME/infrastructure/parameters.json --resource-group $RESOURCE_GROUP
+              env:
+                LOCATION: northeurope
+                RESOURCE_GROUP: anbossar-dev-elysium
+                PRODUCT_NAME: elysium_demo
   - deployment: dev_application
     condition: or(contains(variables['Changes'], 'src/'), contains(variables['Changes'], 'charts/'), ${{ parameters.forceBuild }})
     dependsOn:
