@@ -160,6 +160,7 @@ stages:
       runOnce:
         deploy:
           steps:
+            - checkout: self
             - task: AzureCLI@2
               inputs:
                 azureSubscription: $(azureServiceConnection)
@@ -176,4 +177,12 @@ stages:
       runOnce:
         deploy:
           steps:
-            - bash: echo Hello World
+          - checkout: self
+          - task: AzureCLI@2
+            inputs:
+              azureSubscription: $(azureServiceConnection)
+              scriptType: 'bash'
+              scriptLocation: 'scriptPath'
+              scriptPath: pipelines/scripts/connect-to-cluster.sh
+              arguments: 'elysium_demo dev_elysium'
+          - bash: kubectl get nodes

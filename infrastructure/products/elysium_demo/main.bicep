@@ -8,13 +8,21 @@ targetScope = 'subscription'
 @maxLength(11)
 param namePrefix string
 
+param productName string
+param environmentName string
+
 param location string = deployment().location
+var tags =  {
+  product: productName
+  environment: environmentName
+}
 
 var resourceGroupName = '${namePrefix}${salt}rg'
 
 resource newRG 'Microsoft.Resources/resourceGroups@2021-04-01' = {
   name: resourceGroupName
   location: location
+  tags: tags
 }
 
 module storage '../../modules/storage.bicep' = {
@@ -23,6 +31,7 @@ module storage '../../modules/storage.bicep' = {
   params: {
     namePrefix: namePrefix
     location: location
+    tags: tags
   }
 }
 var aksResourceName = 'aks-${namePrefix}${salt}' 
@@ -30,6 +39,7 @@ module aks '../../aks/main.bicep' = {
   name: 'aks'
   scope: newRG
   params: {
+    tags: tags
     resourceName: resourceGroupName
     location: location
     agentCount: 1

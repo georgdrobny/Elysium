@@ -9,6 +9,8 @@ param location string = resourceGroup().location
 @description('Used to name all resources')
 param resourceName string
 
+param tags object = {}
+
 /*
 Resource sections
 1. Networking
@@ -216,6 +218,7 @@ var kvIPRules = [for kvIp in kvIPAllowlist: {
 resource kv 'Microsoft.KeyVault/vaults@2021-06-01-preview' = if (createKV) {
   name: akvName
   location: location
+  tags: tags
   properties: {
     tenantId: subscription().tenantId
     sku: {
@@ -350,6 +353,7 @@ resource acr 'Microsoft.ContainerRegistry/registries@2021-06-01-preview' = if (!
     #disable-next-line BCP036 //Disabling validation of this parameter to cope with empty string to indicate no ACR required.
     name: registries_sku
   }
+  tags: tags
   properties: {
     policies: {
       trustPolicy: enableACRTrustPolicy ? {
@@ -524,6 +528,7 @@ var appGWenableWafFirewall = appGWsku=='Standard_v2' ? false : appGWenableFirewa
 resource appGwIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2018-11-30' = if (deployAppGw) {
   name: 'id-appgw-${resourceName}'
   location: location
+  tags: tags
 }
 
 var appgwName = 'agw-${resourceName}'
@@ -531,6 +536,7 @@ var appgwResourceId = deployAppGw ? resourceId('Microsoft.Network/applicationGat
 
 resource appgwpip 'Microsoft.Network/publicIPAddresses@2021-02-01' = if (deployAppGw) {
   name: 'pip-agw-${resourceName}'
+  tags: tags
   location: location
   sku: {
     name: 'Standard'
@@ -669,6 +675,7 @@ var appgwProperties = union({
 // 'identity' is always set until this is fixed: https://github.com/Azure/bicep/issues/387#issuecomment-885671296
 resource appgw 'Microsoft.Network/applicationGateways@2021-02-01' = if (deployAppGw) {
   name: appgwName
+  tags: tags
   location: location
   zones: !empty(availabilityZones) ? availabilityZones : []
   identity: {
@@ -1087,6 +1094,7 @@ var azureDefenderSecurityProfile = {
 
 resource aks 'Microsoft.ContainerService/managedClusters@2021-10-01' = {
   name: 'aks-${resourceName}'
+  tags: tags
   location: location
   properties: DefenderForContainers && omsagent ? union(aksProperties,azureDefenderSecurityProfile) : aksProperties
   identity: aks_byo_identity ? aks_identity : {
