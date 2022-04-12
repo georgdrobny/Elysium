@@ -164,16 +164,9 @@ stages:
               inputs:
                 azureSubscription: $(azureServiceConnection)
                 scriptType: 'bash'
-                scriptLocation: 'inlineScript'
-                inlineScript: |
-                  env | sort
-            - bash: |
-                az group create -n $RESOURCE_GROUP -l $LOCATION
-                az deployment group create --template-file 'infrastructure/products/$PRODUCT_NAME/main.bicep' --parameters @environments/$PRODUCT_NAME/infrastructure/parameters.json --resource-group $RESOURCE_GROUP
-              env:
-                LOCATION: northeurope
-                RESOURCE_GROUP: anbossar-dev-elysium
-                PRODUCT_NAME: elysium_demo
+                scriptLocation: 'scriptPath'
+                scriptPath: pipelines/scripts/deploy-infrastructure-product.sh
+                arguments: 'northeurope elysium_demo dev_elysium'
   - deployment: dev_application
     condition: or(contains(variables['Changes'], 'src/'), contains(variables['Changes'], 'charts/'), ${{ parameters.forceBuild }})
     dependsOn:
