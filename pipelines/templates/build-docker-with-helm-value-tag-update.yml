@@ -29,9 +29,9 @@ steps:
     docker buildx build --platform linux/amd64 -f $DOCKERFILE -t $REPOSITORY:latest -t $REPOSITORY:$TAG_NAME --push .
   workingDirectory: src
   env:
-    TAG_NAME: $(tag)
-    REPOSITORY: $(repository)
-    DOCKERFILE: $(dockerfile)
+    TAG_NAME: ${{ tag }}
+    REPOSITORY: ${{ repository }}
+    DOCKERFILE: ${{ dockerfile }}
 - bash: |
     git config --global user.email "pipeline@azure.com"
     git config --global user.name "Azure Pipeline"
@@ -42,7 +42,7 @@ steps:
     git commit -m "$GIT_MESSAGE"
     git push origin HEAD:$SOURCE_BRANCH
   env:
-    TAG: $(tag)
-    PARAMETER_NAME: $(helmParameter)
-    HELM_VALUES_FILE: $(helmValuesFile)
-    SOURCE_BRANCH: $(sourceBranch)
+    TAG: ${{ tag }}
+    PARAMETER_NAME: ${{ helmParameter }}
+    HELM_VALUES_FILE: ${{ helmValuesFile }}
+    SOURCE_BRANCH: ${{ sourceBranch }}
