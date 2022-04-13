@@ -6,7 +6,7 @@ webapp_image_repository: anbossar.azurecr.io/elysium/webapp
 
 pullPolicy: IfNotPresent
 
-job_image_tag: "20220413.15"
+job_image_tag: "20220413.16"
 webapi_image_tag: "20220413.15"
 webapp_image_tag: "20220413.15"
 
