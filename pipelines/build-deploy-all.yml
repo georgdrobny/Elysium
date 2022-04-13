@@ -35,8 +35,8 @@ variables:
   value: charts/elysium/values.yaml
 - name: acr
   value: anbossar
-- name: repository
-  value: anbossar.azurecr.io/elysium/job
+- name: baseRepository
+  value: anbossar.azurecr.io/elysium/
 - name: PullRequest
   value: eq(variables['Build.Reason'], 'PullRequest')
 - name: sourceBranch
@@ -84,7 +84,7 @@ stages:
     - template: templates/build-docker-with-helm-value-tag-update.yml
       parameters:
         tag: $(tag)
-        repository: $(repository)
+        repository: $(baseRepository)job
         helmValuesFile: $(helmValuesFile)
         sourceBranch: $(sourceBranch)
         azureServiceConnection: $(azureServiceConnection)
@@ -98,7 +98,7 @@ stages:
     - template: templates/build-docker-with-helm-value-tag-update.yml
       parameters:
         tag: $(tag)
-        repository: $(repository)
+        repository: $(baseRepository)api
         helmValuesFile: $(helmValuesFile)
         sourceBranch: $(sourceBranch)
         azureServiceConnection: $(azureServiceConnection)
@@ -112,7 +112,7 @@ stages:
     - template: templates/build-docker-with-helm-value-tag-update.yml
       parameters:
         tag: $(tag)
-        repository: $(repository)
+        repository: $(baseRepository)app
         helmValuesFile: $(helmValuesFile)
         sourceBranch: $(sourceBranch)
         azureServiceConnection: $(azureServiceConnection)
