@@ -1,0 +1,48 @@
+parameters:
+- name: tag
+  type: string
+- name: repository
+  type: string
+- name: helmValuesFile
+  type: string
+- name: sourceBranch
+  type: string
+- name: azureServiceConnection
+  type: string
+- name: dockerfile
+  type: string
+- name: helmParameter
+  type: string
+
+steps:
+- checkout: self
+  persistCredentials: true
+  clean: true
+- task: AzureCLI@2
+  inputs:
+    azureSubscription: $(azureServiceConnection)
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      az acr login -n anbossar
+- bash: |
+    docker buildx build --platform linux/amd64 -f $DOCKERFILE -t $REPOSITORY:latest -t $REPOSITORY:$TAG_NAME --push .
+  workingDirectory: src
+  env:
+    TAG_NAME: $(tag)
+    REPOSITORY: $(repository)
+    DOCKERFILE: $(dockerfile)
+- bash: |
+    git config --global user.email "pipeline@azure.com"
+    git config --global user.name "Azure Pipeline"
+    sed -i "s/^$PARAMETER_NAME:.*/$PARAMETER_NAME: \"$TAG\"/" $HELM_VALUES_FILE
+    git add $HELM_VALUES_FILE
+    GIT_MESSAGE="Update $HELM_VALUES_FILE with tag $TAG for $PARAMETER_NAME"
+    echo $GIT_MESSAGE
+    git commit -m "$GIT_MESSAGE"
+    git push origin HEAD:$SOURCE_BRANCH
+  env:
+    TAG: $(tag)
+    PARAMETER_NAME: $(helmParameter)
+    HELM_VALUES_FILE: $(helmValuesFile)
+    SOURCE_BRANCH: $(sourceBranch)

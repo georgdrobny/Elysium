@@ -1,0 +1,25 @@
+apiVersion: batch/v1
+kind: Deployment
+metadata:
+  name: {{ include "Elysium.fullname" . }}-api
+  labels:
+    {{- include "Elysium.labels" . | nindent 4 }}
+    app: {{ include "Elysium.fullname" . }}-api
+replicas: 3
+spec:
+  template:
+    metadata:
+      labels:
+        {{- include "Elysium.selectorLabels" . | nindent 8 }}
+        app: {{ include "Elysium.fullname" . }}-api
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+      - image: "{{ .Values.api_image_repository }}:{{ .Values.api_image_tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.pullPolicy }}
+        name: {{ .Chart.Name }}-api
+        resources: {}
+      restartPolicy: Never

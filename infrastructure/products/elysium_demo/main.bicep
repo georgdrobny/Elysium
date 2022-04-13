@@ -12,6 +12,8 @@ param productName string
 param environmentName string
 param version string
 param branch string
+param acrName string
+param acrResourceGroup string
 
 param location string = deployment().location
 var tags =  {
@@ -38,6 +40,7 @@ module storage '../../modules/storage.bicep' = {
     tags: tags
   }
 }
+
 var aksResourceName = 'aks-${namePrefix}${salt}' 
 module aks '../../aks/main.bicep' = {
   name: 'aks'
@@ -62,6 +65,15 @@ module aks '../../aks/main.bicep' = {
 resource aksCluster 'Microsoft.ContainerService/managedClusters@2022-01-01' existing = {
   name: aksResourceName
   scope: newRG
+}
+
+module acrPullRole '../../modules/acrroles.bicep' = {
+  name: 'acrPullRole'
+  scope: resourceGroup(acrResourceGroup)
+  params: {
+    acrName: acrName
+    aks: aksCluster
+  }
 }
 
 output aksClusterId string = aksCluster.id

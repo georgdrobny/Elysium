@@ -81,48 +81,43 @@ stages:
     dependsOn: []
     condition: or(contains(variables.Changes, 'Job.'), ${{ parameters.forceBuild }})
     steps:
-    - checkout: self
-      persistCredentials: true
-      clean: true
-    - task: AzureCLI@2
-      inputs:
-        azureSubscription: 'anbossar-training-subscription(8b25cfae-660b-4066-9ce5-0858e9ab3eac)'
-        scriptType: 'bash'
-        scriptLocation: 'inlineScript'
-        inlineScript: |
-          az acr login -n anbossar
-    - bash: |
-        docker buildx build --platform linux/amd64 -f Job.Dockerfile -t $REPOSITORY:latest -t $REPOSITORY:$TAG_NAME --push .
-      workingDirectory: src
-      env:
-        TAG_NAME: $(tag)
-        REPOSITORY: $(repository)
-    - bash: |
-        git config --global user.email "pipeline@azure.com"
-        git config --global user.name "Azure Pipeline"
-        sed -i "s/^$PARAMETER_NAME:.*/$PARAMETER_NAME: \"$TAG\"/" $HELM_VALUES_FILE
-        git add $HELM_VALUES_FILE
-        GIT_MESSAGE="Update $HELM_VALUES_FILE with tag $TAG for $PARAMETER_NAME"
-        echo $GIT_MESSAGE
-        git commit -m "$GIT_MESSAGE"
-        git push origin HEAD:$SOURCE_BRANCH
-      env:
-        TAG: $(tag)
-        PARAMETER_NAME: job_image_tag
-        HELM_VALUES_FILE: $(helmValuesFile)
-        SOURCE_BRANCH: $(sourceBranch)
+    - template: pipelines/templates/build-docker-with-helm-value-tag-update.yml
+      parameters:
+        tag: $(tag)
+        repository: $(repository)
+        helmValuesFile: $(helmValuesFile)
+        sourceBranch: $(sourceBranch)
+        azureServiceConnection: $(azureServiceConnection)
+        dockerfile: Job.Dockerfile
+        helmParameter: job_image_tag
   - job: Build_WebApiHost
     condition: or(contains(variables['Changes'], 'WebApi.'), contains(variables['Changes'], 'Library'), ${{ parameters.forceBuild }})
     displayName: Build Web Api Build_Job
     dependsOn: []
     steps:
-    - script: echo Hello, world!
+    - template: pipelines/templates/build-docker-with-helm-value-tag-update.yml
+      parameters:
+        tag: $(tag)
+        repository: $(repository)
+        helmValuesFile: $(helmValuesFile)
+        sourceBranch: $(sourceBranch)
+        azureServiceConnection: $(azureServiceConnection)
+        dockerfile: WebApi.Dockerfile
+        helmParameter: webapi_image_tag
   - job: Build_WebAppHost
-    condition: contains(variables['Changes'], 'WebApp.')
+    condition: or(contains(variables['Changes'], 'WebApp.'), contains(variables['Changes'], 'Library'), ${{ parameters.forceBuild }})
     displayName: Build Web App Build_Job
     dependsOn: []
     steps:
-    - script: echo Hello, world!
+    - template: pipelines/templates/build-docker-with-helm-value-tag-update.yml
+      parameters:
+        tag: $(tag)
+        repository: $(repository)
+        helmValuesFile: $(helmValuesFile)
+        sourceBranch: $(sourceBranch)
+        azureServiceConnection: $(azureServiceConnection)
+        dockerfile: WebApp.Dockerfile
+        helmParameter: webapp_image_tag
 
 - stage: UpdateHelmChartVersion
   displayName: Update the Helm Chart Version
@@ -168,7 +163,7 @@ stages:
                 scriptType: 'bash'
                 scriptLocation: 'scriptPath'
                 scriptPath: pipelines/scripts/deploy-infrastructure-product.sh
-                arguments: 'northeurope elysium_demo dev_elysium $(chartVersion) $(sourceBranch)'
+                arguments: 'northeurope elysium_demo dev_elysium $(chartVersion) $(sourceBranch) $(acr)' 
   - deployment: dev_application
     condition: or(contains(variables['Changes'], 'src/'), contains(variables['Changes'], 'charts/'), ${{ parameters.forceBuild }})
     dependsOn:
