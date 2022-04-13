@@ -142,7 +142,7 @@ stages:
         git remote -v
         git pull origin $SOURCE_BRANCH
       env:
-        SOURCE_BRANCH: ${{ parameters.sourceBranch }}
+        SOURCE_BRANCH: $(sourceBranch)
     - task: AzureCLI@2
       inputs:
         azureSubscription: $(azureServiceConnection)
