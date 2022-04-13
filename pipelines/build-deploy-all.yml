@@ -95,7 +95,7 @@ stages:
     displayName: Build Web Api Build_Job
     dependsOn: []
     steps:
-    - template: pipelines/templates/build-docker-with-helm-value-tag-update.yml
+    - template: templates/build-docker-with-helm-value-tag-update.yml
       parameters:
         tag: $(tag)
         repository: $(repository)
@@ -109,7 +109,7 @@ stages:
     displayName: Build Web App Build_Job
     dependsOn: []
     steps:
-    - template: pipelines/templates/build-docker-with-helm-value-tag-update.yml
+    - template: templates/build-docker-with-helm-value-tag-update.yml
       parameters:
         tag: $(tag)
         repository: $(repository)
