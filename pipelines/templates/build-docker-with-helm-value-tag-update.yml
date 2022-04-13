@@ -42,6 +42,7 @@ steps:
     GIT_MESSAGE="Update $HELM_VALUES_FILE with tag $TAG for $PARAMETER_NAME"
     echo Git commit message: $GIT_MESSAGE
     echo "Pulling ..."
+    git remote -v
     git pull origin/$SOURCE_BRANCH
     echo "Committing ..."
     git commit -m "$GIT_MESSAGE"
