@@ -131,6 +131,18 @@ stages:
   - job: UpdateHelmChartVersion
     condition: or(contains(variables['Changes'], 'src/'), contains(variables['Changes'], 'charts/'), ${{ parameters.forceBuild }})
     steps:
+    - checkout: self
+      persistCredentials: true
+      clean: true
+    - bash: |
+        echo "Setting user..."
+        git config --global user.email "pipeline@azure.com"
+        git config --global user.name "Azure Pipeline"
+        echo "Pulling ..."
+        git remote -v
+        git pull origin $SOURCE_BRANCH
+      env:
+        SOURCE_BRANCH: ${{ parameters.sourceBranch }}
     - task: AzureCLI@2
       inputs:
         azureSubscription: $(azureServiceConnection)
