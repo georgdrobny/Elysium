@@ -1,6 +1,10 @@
 parameters:
 - name: forceBuild
-  displayName: Force Builds?
+  displayName: Force Builds (builds are usually just in PR's)?
+  default: true # for development
+  type: boolean
+- name: forceDeployments
+  displayName: Force Deployment (deploys are usually just on merge with main)?
   default: true # for development
   type: boolean
 
@@ -35,6 +39,8 @@ variables:
   value: charts/elysium/values.yaml
 - name: acr
   value: anbossar
+- name: acrResourceGroup
+  value: anbossar-shared
 - name: baseRepository
   value: anbossar.azurecr.io/elysium/
 - name: PullRequest
@@ -161,7 +167,7 @@ stages:
   - Changes
   jobs:
   - deployment: dev_infrastructure
-    condition: or(contains(variables['Changes'], 'infrastructure/'), contains(variables['Changes'], 'environments/'), ${{ parameters.forceBuild }})
+    condition: or(contains(variables['Changes'], 'infrastructure/'), contains(variables['Changes'], 'environments/'), ${{ parameters.forceDeployment }})
     dependsOn: []
     environment: dev_elysium
     strategy:
@@ -177,7 +183,7 @@ stages:
                 scriptPath: pipelines/scripts/deploy-infrastructure-product.sh
                 arguments: 'northeurope elysium_demo dev_elysium $(chartVersion) $(sourceBranch) $(acr)' 
   - deployment: dev_application
-    condition: or(contains(variables['Changes'], 'src/'), contains(variables['Changes'], 'charts/'), ${{ parameters.forceBuild }})
+    condition: or(contains(variables['Changes'], 'src/'), contains(variables['Changes'], 'charts/'), ${{ parameters.forceDeployment }})
     dependsOn:
     - dev_infrastructure
     environment: dev_elysium
@@ -192,7 +198,7 @@ stages:
               scriptType: 'bash'
               scriptLocation: 'scriptPath'
               scriptPath: pipelines/scripts/connect-to-cluster.sh
-              arguments: 'elysium_demo dev_elysium $(acr)'
+              arguments: 'elysium_demo dev_elysium'
           - task: AzureCLI@2
             inputs:
               azureSubscription: $(azureServiceConnection)
