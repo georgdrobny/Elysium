@@ -5,7 +5,8 @@ api_image_repository: anbossar.azurecr.io/elysium/job
 pullPolicy: IfNotPresent
 
 job_image_tag: "20220413.6"
-api_image_tag: "20220412.8"
+webapi_image_tag: "20220412.8"
+webapp_image_tag: "20220412.8"
 
 imagePullSecrets: []
 nameOverride: ""

@@ -18,7 +18,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       containers:
-      - image: "{{ .Values.api_image_repository }}:{{ .Values.api_image_tag | default .Chart.AppVersion }}"
+      - image: "{{ .Values.api_image_repository }}:{{ .Values.webapi_image_tag | default .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.pullPolicy }}
         name: {{ .Chart.Name }}-api
         resources: {}
