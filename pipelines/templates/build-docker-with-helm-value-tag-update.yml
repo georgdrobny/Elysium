@@ -33,14 +33,19 @@ steps:
     REPOSITORY: ${{ parameters.repository }}
     DOCKERFILE: ${{ parameters.dockerfile }}
 - bash: |
+    echo "Setting user..."
     git config --global user.email "pipeline@azure.com"
     git config --global user.name "Azure Pipeline"
+    echo "Modifying files..."
     sed -i "s/^$PARAMETER_NAME:.*/$PARAMETER_NAME: \"$TAG\"/" $HELM_VALUES_FILE
     git add $HELM_VALUES_FILE
     GIT_MESSAGE="Update $HELM_VALUES_FILE with tag $TAG for $PARAMETER_NAME"
-    echo $GIT_MESSAGE
-    git commit -m "$GIT_MESSAGE"
+    echo Git commit message: $GIT_MESSAGE
+    echo "Pulling ..."
     git pull origin/$SOURCE_BRANCH
+    echo "Committing ..."
+    git commit -m "$GIT_MESSAGE"
+    echo "Pushing ..."
     git push origin HEAD:$SOURCE_BRANCH
   env:
     TAG: ${{ parameters.tag }}
