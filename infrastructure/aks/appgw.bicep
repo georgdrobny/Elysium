@@ -7,6 +7,7 @@ param userAssignedIdentity string
 param workspaceId string
 param appGWcount int
 param appGWmaxCount int
+param tags object = {}
 
 var appgwName = 'agw-${resourceName}'
 var appgwResourceId = resourceId('Microsoft.Network/applicationGateways', '${appgwName}')
@@ -14,6 +15,7 @@ var appgwResourceId = resourceId('Microsoft.Network/applicationGateways', '${app
 resource appgwpip 'Microsoft.Network/publicIPAddresses@2020-07-01' = {
   name: 'pip-agw-${resourceName}'
   location: location
+  tags: tags
   sku: {
     name: 'Standard'
   }
@@ -133,6 +135,7 @@ var appGwZones = !empty(availabilityZones) ? availabilityZones : []
 // https://github.com/Azure/bicep/issues/387#issuecomment-885671296
 resource appgw 'Microsoft.Network/applicationGateways@2020-07-01' = if (!empty(userAssignedIdentity)) {
   name: appgwName
+  tags: tags
   location: location
   zones: appGwZones
   identity: !empty(userAssignedIdentity) ? {

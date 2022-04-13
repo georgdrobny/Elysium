@@ -1,5 +1,5 @@
 
-var salt = take(uniqueString(subscription().id, namePrefix), 4)
+var salt = take(uniqueString(subscription().id, namePrefix, branch), 4)
 
 // set the target scope for this file
 targetScope = 'subscription'
@@ -10,11 +10,15 @@ param namePrefix string
 
 param productName string
 param environmentName string
+param version string
+param branch string
 
 param location string = deployment().location
 var tags =  {
   product: productName
   environment: environmentName
+  version: version
+  branch: branch
 }
 
 var resourceGroupName = '${namePrefix}${salt}rg'

@@ -7,11 +7,13 @@ param certManagerFW bool = false
 param acrPrivatePool bool = false
 param acrAgentPoolSubnetAddressPrefix string = ''
 param availabilityZones array = []
+param tags object = {}
 
 var firewallPublicIpName = 'pip-afw-${resourceName}'
 
 resource fw_pip 'Microsoft.Network/publicIPAddresses@2021-03-01' = {
   name: firewallPublicIpName
+  tags: tags
   location: location
   sku: {
     name: 'Standard'
@@ -65,6 +67,7 @@ param appDnsZoneName string = ''
 var fw_name = 'afw-${resourceName}'
 resource fw 'Microsoft.Network/azureFirewalls@2021-03-01' = {
   name: fw_name
+  tags: tags
   location: location
   zones: !empty(availabilityZones) ? availabilityZones : []
   properties: {
@@ -94,6 +97,7 @@ resource fw 'Microsoft.Network/azureFirewalls@2021-03-01' = {
 resource fwPolicy 'Microsoft.Network/firewallPolicies@2020-11-01' = {
   name: 'afwp-${resourceName}'
   location: location
+  tags: tags
   properties: {
     sku: {
       tier: 'Standard'

@@ -168,7 +168,7 @@ stages:
                 scriptType: 'bash'
                 scriptLocation: 'scriptPath'
                 scriptPath: pipelines/scripts/deploy-infrastructure-product.sh
-                arguments: 'northeurope elysium_demo dev_elysium'
+                arguments: 'northeurope elysium_demo dev_elysium $(chartVersion) $(sourceBranch)'
   - deployment: dev_application
     condition: or(contains(variables['Changes'], 'src/'), contains(variables['Changes'], 'charts/'), ${{ parameters.forceBuild }})
     dependsOn:
