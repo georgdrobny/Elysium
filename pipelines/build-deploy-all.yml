@@ -14,7 +14,7 @@ trigger:
     exclude:
     - README.md
     - Elysium.sln
-    - charts/Elysium/values.yaml
+    - charts/elysium/values.yaml
 
 pr: 
   branches:
@@ -32,7 +32,7 @@ variables:
 - name: tag
   value: $(Build.BuildNumber)
 - name: helmValuesFile
-  value: charts/Elysium/values.yaml
+  value: charts/elysium/values.yaml
 - name: acr
   value: anbossar
 - name: repository

@@ -4,11 +4,13 @@ metadata:
   name: {{ include "Elysium.fullname" . }}-job
   labels:
     {{- include "Elysium.labels" . | nindent 4 }}
+    app: {{ include "Elysium.fullname" . }}-job
 spec:
   template:
     metadata:
       labels:
         {{- include "Elysium.selectorLabels" . | nindent 8 }}
+        app: {{ include "Elysium.fullname" . }}-job
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
