@@ -4,7 +4,7 @@ job_image_repository: anbossar.azurecr.io/elysium/job
 api_image_repository: anbossar.azurecr.io/elysium/job
 pullPolicy: IfNotPresent
 
-job_image_tag: "20220413.6"
+job_image_tag: "20220413.11"
 webapi_image_tag: "20220412.8"
 webapp_image_tag: "20220413.10"
 
