@@ -81,7 +81,7 @@ stages:
     dependsOn: []
     condition: or(contains(variables.Changes, 'Job.'), ${{ parameters.forceBuild }})
     steps:
-    - template: pipelines/templates/build-docker-with-helm-value-tag-update.yml
+    - template: templates/build-docker-with-helm-value-tag-update.yml
       parameters:
         tag: $(tag)
         repository: $(repository)
