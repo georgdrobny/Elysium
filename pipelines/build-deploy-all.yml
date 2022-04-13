@@ -3,7 +3,7 @@ parameters:
   displayName: Force Builds (builds are usually just in PR's)?
   default: true # for development
   type: boolean
-- name: forceDeployments
+- name: forceDeployment
   displayName: Force Deployment (deploys are usually just on merge with main)?
   default: true # for development
   type: boolean
