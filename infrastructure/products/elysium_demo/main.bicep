@@ -41,13 +41,13 @@ module storage '../../modules/storage.bicep' = {
   }
 }
 
-var aksResourceName = 'aks-${namePrefix}${salt}' 
+var aksResourceName = '${namePrefix}${salt}' 
 module aks '../../aks/main.bicep' = {
   name: 'aks'
   scope: newRG
   params: {
     tags: tags
-    resourceName: resourceGroupName
+    resourceName: aksResourceName
     location: location
     agentCount: 1
     upgradeChannel: 'stable'
@@ -62,18 +62,14 @@ module aks '../../aks/main.bicep' = {
   }
 }
 
-resource aksCluster 'Microsoft.ContainerService/managedClusters@2022-01-01' existing = {
-  name: aksResourceName
-  scope: newRG
-}
-
 module acrPullRole '../../modules/acrroles.bicep' = {
   name: 'acrPullRole'
   scope: resourceGroup(acrResourceGroup)
+  dependsOn: [
+    aks
+  ]
   params: {
     acrName: acrName
-    aks: aksCluster
+    kubeletObjectId: aks.outputs.kubeletObjectId
   }
 }
-
-output aksClusterId string = aksCluster.id
