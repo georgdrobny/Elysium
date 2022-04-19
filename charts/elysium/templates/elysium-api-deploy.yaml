@@ -5,8 +5,12 @@ metadata:
   labels:
     {{- include "Elysium.labels" . | nindent 4 }}
     app: {{ include "Elysium.fullname" . }}-api
-replicas: 3
 spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      {{- include "Elysium.selectorLabels" . | nindent 6 }}
+      app: {{ include "Elysium.fullname" . }}-api
   template:
     metadata:
       labels:
@@ -22,4 +26,8 @@ spec:
         imagePullPolicy: {{ .Values.pullPolicy }}
         name: {{ .Chart.Name }}-api
         resources: {}
+        ports:
+        - name: http
+          containerPort: 80
+          protocol: TCP
       restartPolicy: Never
