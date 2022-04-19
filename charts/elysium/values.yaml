@@ -8,7 +8,7 @@ pullPolicy: IfNotPresent
 
 job_image_tag: "20220419.1"
 webapi_image_tag: "20220419.2"
-webapp_image_tag: "20220419.1"
+webapp_image_tag: "20220419.2"
 
 imagePullSecrets: []
 nameOverride: ""
