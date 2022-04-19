@@ -169,7 +169,7 @@
         </mxGraphModel>
     </diagram>
     <diagram id="e83GrLSAXhTG0BjHBxgz" name="Page-3">
-        <mxGraphModel dx="1966" dy="645" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+        <mxGraphModel dx="1584" dy="645" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
             <root>
                 <mxCell id="8GoytEmxMu1QR5XvEA5H-0"/>
                 <mxCell id="8GoytEmxMu1QR5XvEA5H-1" parent="8GoytEmxMu1QR5XvEA5H-0"/>
@@ -264,6 +264,97 @@
                 </mxCell>
                 <mxCell id="8GoytEmxMu1QR5XvEA5H-28" value="Helm" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="8GoytEmxMu1QR5XvEA5H-1">
                     <mxGeometry x="480" y="840" width="120" height="60" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+    <diagram id="qfi6Pajm4cA2CCoInonU" name="CANARY Service Level">
+        <mxGraphModel dx="1725" dy="645" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="JdksVaczsbtemcn0aaJH-0"/>
+                <mxCell id="JdksVaczsbtemcn0aaJH-1" parent="JdksVaczsbtemcn0aaJH-0"/>
+                <mxCell id="JdksVaczsbtemcn0aaJH-13" style="edgeStyle=none;html=1;" edge="1" parent="JdksVaczsbtemcn0aaJH-1" source="JdksVaczsbtemcn0aaJH-2" target="JdksVaczsbtemcn0aaJH-5">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="JdksVaczsbtemcn0aaJH-14" style="edgeStyle=none;html=1;entryX=1;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="JdksVaczsbtemcn0aaJH-1" source="JdksVaczsbtemcn0aaJH-2" target="JdksVaczsbtemcn0aaJH-8">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="JdksVaczsbtemcn0aaJH-2" value="1. Helm Release: Canary" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="JdksVaczsbtemcn0aaJH-1">
+                    <mxGeometry x="254" y="440" width="160" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="JdksVaczsbtemcn0aaJH-6" style="edgeStyle=none;html=1;" edge="1" parent="JdksVaczsbtemcn0aaJH-1" source="JdksVaczsbtemcn0aaJH-3" target="JdksVaczsbtemcn0aaJH-4">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="JdksVaczsbtemcn0aaJH-7" style="edgeStyle=none;html=1;" edge="1" parent="JdksVaczsbtemcn0aaJH-1" source="JdksVaczsbtemcn0aaJH-3" target="JdksVaczsbtemcn0aaJH-5">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="JdksVaczsbtemcn0aaJH-3" value="Service" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="JdksVaczsbtemcn0aaJH-1">
+                    <mxGeometry x="80" y="210" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="JdksVaczsbtemcn0aaJH-4" value="Stable&lt;br&gt;R: 4" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="JdksVaczsbtemcn0aaJH-1">
+                    <mxGeometry x="290" y="210" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="JdksVaczsbtemcn0aaJH-5" value="Canary&lt;br&gt;R: 1" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="JdksVaczsbtemcn0aaJH-1">
+                    <mxGeometry x="290" y="340" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="JdksVaczsbtemcn0aaJH-9" style="edgeStyle=none;html=1;" edge="1" parent="JdksVaczsbtemcn0aaJH-1" source="JdksVaczsbtemcn0aaJH-8" target="JdksVaczsbtemcn0aaJH-5">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="JdksVaczsbtemcn0aaJH-8" value="Canary Service" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="JdksVaczsbtemcn0aaJH-1">
+                    <mxGeometry x="80" y="340" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="JdksVaczsbtemcn0aaJH-11" style="edgeStyle=none;html=1;" edge="1" parent="JdksVaczsbtemcn0aaJH-1" source="JdksVaczsbtemcn0aaJH-10" target="JdksVaczsbtemcn0aaJH-4">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="JdksVaczsbtemcn0aaJH-10" value="2. Helm Upgrade: Stable" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="JdksVaczsbtemcn0aaJH-1">
+                    <mxGeometry x="450" y="440" width="160" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="JdksVaczsbtemcn0aaJH-15" style="edgeStyle=none;html=1;" edge="1" parent="JdksVaczsbtemcn0aaJH-1" source="JdksVaczsbtemcn0aaJH-12" target="JdksVaczsbtemcn0aaJH-5">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="JdksVaczsbtemcn0aaJH-12" value="3. Helm Uninstall: Canary" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="JdksVaczsbtemcn0aaJH-1">
+                    <mxGeometry x="630" y="440" width="160" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="jAcaMLSZtG1mzBd0ZJ2E-1" style="edgeStyle=none;html=1;" edge="1" parent="JdksVaczsbtemcn0aaJH-1" source="jAcaMLSZtG1mzBd0ZJ2E-0" target="JdksVaczsbtemcn0aaJH-3">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="jAcaMLSZtG1mzBd0ZJ2E-0" value="Ingress" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="JdksVaczsbtemcn0aaJH-1">
+                    <mxGeometry x="-50" y="210" width="80" height="80" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+    <diagram id="cDOgKV2BcpNp0tY8zDRq" name="Blue/Green">
+        <mxGraphModel dx="898" dy="645" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="Z-NWukYmcKygL9VdFa-Q-0"/>
+                <mxCell id="Z-NWukYmcKygL9VdFa-Q-1" parent="Z-NWukYmcKygL9VdFa-Q-0"/>
+                <mxCell id="Z-NWukYmcKygL9VdFa-Q-2" value="Service" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="Z-NWukYmcKygL9VdFa-Q-1">
+                    <mxGeometry x="307" y="160" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="Z-NWukYmcKygL9VdFa-Q-3" value="Pod" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="Z-NWukYmcKygL9VdFa-Q-1">
+                    <mxGeometry x="441" y="160" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="Z-NWukYmcKygL9VdFa-Q-5" value="Ingress" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="Z-NWukYmcKygL9VdFa-Q-1">
+                    <mxGeometry x="70" y="160" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="2fF9e8lQEgW3PLMLPWoT-0" value="Ingress" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="Z-NWukYmcKygL9VdFa-Q-1">
+                    <mxGeometry x="70" y="290" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="2fF9e8lQEgW3PLMLPWoT-1" value="Service" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="Z-NWukYmcKygL9VdFa-Q-1">
+                    <mxGeometry x="307" y="290" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="2fF9e8lQEgW3PLMLPWoT-2" value="Pod" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="Z-NWukYmcKygL9VdFa-Q-1">
+                    <mxGeometry x="441" y="290" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="2fF9e8lQEgW3PLMLPWoT-3" value="1. Helm: Deploy Blue Release" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="Z-NWukYmcKygL9VdFa-Q-1">
+                    <mxGeometry x="80" y="460" width="140" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="2fF9e8lQEgW3PLMLPWoT-4" value="2. Helm: Upgrade Green Release" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="Z-NWukYmcKygL9VdFa-Q-1">
+                    <mxGeometry x="260" y="460" width="140" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="2fF9e8lQEgW3PLMLPWoT-5" value="3. Helm: Uninstall Blue Release" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="Z-NWukYmcKygL9VdFa-Q-1">
+                    <mxGeometry x="441" y="460" width="140" height="50" as="geometry"/>
                 </mxCell>
             </root>
         </mxGraphModel>

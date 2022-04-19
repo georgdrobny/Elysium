@@ -69,6 +69,7 @@ module acrPullRole '../../modules/acrroles.bicep' = {
     aks
   ]
   params: {
+    location: location
     acrName: acrName
     kubeletObjectId: aks.outputs.kubeletObjectId
   }
