@@ -62,9 +62,13 @@ module aks '../../aks/main.bicep' = {
   }
 }
 
-module acrPullRole '../../modules/acrroles.bicep' = {
-  name: 'acrPullRole'
-  scope: resourceGroup(acrResourceGroup)
+resource acrRG 'Microsoft.Resources/resourceGroups@2021-04-01' existing = {
+  name: acrResourceGroup
+}
+
+module acrPullRoleDeployment '../../modules/acrroles.bicep' = {
+  name: 'acrPullRoleDeployment'
+  scope: acrRG
   dependsOn: [
     aks
   ]
